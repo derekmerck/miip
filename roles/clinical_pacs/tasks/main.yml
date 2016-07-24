@@ -1,0 +1,36 @@
+#- name: "Create orthanc config"
+#  template: src="templates/orthanc_config.json.j2"
+
+- name: "Setup orthanc db in postgres"
+  postgresql_db: "name={{settings.orthanc.db_name}}
+                 state=present
+                 login_host=localhost
+                 port={{ports.postgres.sql}}
+                 login_user={{credentials.postgres.db_user}}
+                 login_password={{credentials.postgres.db_pword}}"
+
+- name: "Setup orthanc user for db in postgres"
+  postgresql_user: "db={{settings.orthanc.db_name}}
+                   name={{credentials.orthanc.db_user}}
+                   password={{credentials.orthanc.db_pword}}
+                   state=present
+                   login_host=localhost
+                   port={{ports.postgres.sql}}
+                   login_user={{credentials.postgres.db_user}}
+                   login_password={{credentials.postgres.db_pword}}"
+
+- name: "Create orthanc config"
+  sudo: True
+  template: src="templates/orthanc.json.j2" dest="/tmp/orthanc.json"
+
+- name: "Launch orthanc container"
+  docker:
+    name: orthanc
+    image: jodogne/orthanc-plugins
+    volumes:
+      - "/tmp/orthanc.json:/etc/orthanc/orthanc.json:ro"
+    links:
+      - db:postgres
+    ports:
+      - "{{ports.orthanc.html}}:8042"
+      - "{{ports.orthanc.dicom}}:4242"

@@ -1,0 +1,14 @@
+- name: "Launch Splunk container"
+  docker:
+    name: splunk
+    image: outcoldman/splunk
+#      volumes_from:
+#        - orthanc
+#        - xnat
+    ports:
+      - "{{ports.splunk.html}}:8000"
+#      - "{{ports.splunk.syslog}}:1514"
+#      - "{{ports.splunk.api}}:8088"
+
+    env:
+      SPLUNK_START_ARGS: --accept-license

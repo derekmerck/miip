@@ -1,0 +1,19 @@
+
+
+  - name: "Create xnat config"
+    template: src="templates/xnat_config.conf.j2"
+
+  - name: "Build xnat container"
+
+  - name: check out the repository on the host
+    git: repo={{ repo_url }} dest={{ proj_path }} accept_hostkey=yes
+
+  - name: "Launch xnat container"
+    docker:
+      name: xnat
+      image: xnat-builder
+      links:
+        - db: postgres
+      ports:
+        - "{{xnat.ports.html}}":8080
+        - "{{xnat.ports.dicom}}":4242

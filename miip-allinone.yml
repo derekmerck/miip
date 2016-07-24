@@ -1,0 +1,52 @@
+---
+# Ansible playbook for standing up a single machine MIIP supporting all roles
+
+- name: All-in-one MIIP
+  vars:
+    ports:
+      postgres:
+        sql:    1433
+      orthanc:
+        dicom:  4242
+        html:   4280
+      xnat:
+        dicom:  5242
+        html:   5280
+      splunk:
+        syslog: 1514
+        html:   1580
+        api:    1583
+
+  vars_files:
+    - secrets.yml
+
+  hosts:
+    - test
+
+  pre_tasks:
+    - name: install apt packages
+      apt: pkg={{ item }} update_cache=yes cache_valid_time=3600
+      sudo: True
+      with_items:
+        - git
+        - python-pip
+        - python-psycopg2
+        - python-setuptools
+
+    - name: install pip packages
+      pip: name={{ item }}
+      sudo: True
+      with_items:
+        - docker-py
+
+  roles:
+    - clinical_pacs  # includes database dependency
+  #  - research_pacs  # includes database dependency
+    - remote_logging
+
+#  post_tasks:
+#    - name: Notify Slack that the servers have been updated
+#      local_action: >
+#        slack
+#        token={{ credentials.slack.token }}
+#        msg="MIIP server `{{ inventory_hostname }}` configured"
