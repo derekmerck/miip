@@ -3,6 +3,9 @@
 
 - name: All-in-one MIIP
   vars:
+    # Wipes DB, useful if rebuilding from scratch after a failed build
+    # clean_xnat: True
+
     ports:
       postgres:
         sql:    1433
@@ -40,13 +43,13 @@
         - docker-py
 
   roles:
-    - clinical_pacs  # includes database dependency
-  #  - research_pacs  # includes database dependency
+    - clinical_pacs
+    - research_pacs
     - remote_logging
 
-#  post_tasks:
-#    - name: Notify Slack that the servers have been updated
-#      local_action: >
-#        slack
-#        token={{ credentials.slack.token }}
-#        msg="MIIP server `{{ inventory_hostname }}` configured"
+  post_tasks:
+    - name: Notify Slack that the servers have been updated
+      local_action: >
+        slack
+        token={{ credentials.slack.token }}
+        msg="MIIP server `{{ inventory_hostname }}` configured"
