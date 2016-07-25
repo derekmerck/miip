@@ -68,7 +68,6 @@
   "HttpCompressionEnabled" : true,
 
 
-
   /**
    * Configuration of the DICOM server
    **/
@@ -318,7 +317,7 @@
 
   "PostgreSQL" : {
     "EnableIndex" : true,
-    "EnableStorage" : true,
+    "EnableStorage" : false,
     "Host" : "postgres",
     "Port" : 5432, // Odd that this is not the exposed port... {{ ports.postgres.sql }},
     "Database" : "{{ settings.orthanc.db_name }}",

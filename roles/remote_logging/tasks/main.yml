@@ -2,13 +2,15 @@
   docker:
     name: splunk
     image: outcoldman/splunk
-#      volumes_from:
-#        - orthanc
-#        - xnat
+    volumes_from:
+      - orthanc
+      - xnat
     ports:
       - "{{ports.splunk.html}}:8000"
-#      - "{{ports.splunk.syslog}}:1514"
-#      - "{{ports.splunk.api}}:8088"
-
+      - "{{ports.splunk.syslog}}:1514"
+      - "{{ports.splunk.api}}:8088"
     env:
-      SPLUNK_START_ARGS: --accept-license
+      SPLUNK_START_ARGS: "--accept-license"
+      SPLUNK_CMD: "edit user admin -password {{credentials.splunk.admin_pword}} -role admin -auth admin:changeme"
+      SPLUNK_ADD: "monitor /var/log/orthanc"
+      SPLUNK_ADD_1: "monitor /usr/local/tomcat/webapps/xnat/logs/"

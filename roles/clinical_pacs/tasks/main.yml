@@ -16,16 +16,28 @@
                    login_user={{credentials.postgres.db_user}}
                    login_password={{credentials.postgres.db_pword}}"
 
+- name: "Add host mapped directories"
+  sudo: True
+  file: path={{ item }} state=directory owner={{ansible_user_id}}
+  with_items:
+    - "{{ settings.orthanc.log_dir }}"
+    - "{{ settings.orthanc.data_dir }}"
+
 - name: "Create orthanc config"
   sudo: True
-  template: src="templates/orthanc.json.j2" dest="/tmp/orthanc.json"
+  template: >
+    src=templates/orthanc.json.j2
+    dest={{ settings.orthanc.data_dir }}/orthanc.json
 
 - name: "Launch orthanc container"
   docker:
     name: orthanc
     image: jodogne/orthanc-plugins
+    command: "--logdir=/var/log/orthanc /etc/orthanc/orthanc.json"
     volumes:
-      - "/tmp/orthanc.json:/etc/orthanc/orthanc.json:ro"
+      - "{{settings.orthanc.data_dir}}/orthanc.json:/etc/orthanc/orthanc.json:ro"
+      - "{{settings.orthanc.data_dir}}/db:/var/lib/orthanc/db"
+      - "{{settings.orthanc.log_dir}}:/var/log/orthanc"
     links:
       - db:postgres
     ports:

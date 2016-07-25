@@ -73,6 +73,13 @@
                  login_password={{credentials.postgres.db_pword}}"
   when: clean_xnat is defined and clean_xnat
 
+- name: "Add host mapped directories"
+  sudo: True
+  file: path={{ item }} state=directory owner={{ansible_user_id}}
+  with_items:
+    - "{{ settings.xnat.log_dir }}"
+    - "{{ settings.xnat.data_dir }}"
+
 - name: run our instance of xnat
   docker:
     image: xnat165
@@ -80,6 +87,9 @@
     links:
       - "db:postgres"
       - "xnat-repo:repo"
+    volumes:
+      - "{{settings.xnat.log_dir}}:/usr/local/tomcat/webapps/xnat/logs"
+      - "{{settings.xnat.data_dir}}:/data"
     ports:
       - "{{ports.xnat.html}}:8080"
       - "{{ports.xnat.dicom}}:8104"
