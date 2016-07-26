@@ -1,9 +1,13 @@
 ---
 # Ansible playbook for standing up a single machine MIIP supporting all roles
 
-# TODO: Update xnat site address from host file?
+# TODO: Add wait_for for postgres up
 
 - name: All-in-one MIIP
+
+  hosts:
+    - cirr2
+
   vars:
     # Wipes DB, useful if rebuilding from scratch after a failed build
     # clean_xnat: True
@@ -26,12 +30,16 @@
   vars_files:
     - secrets.yml
 
-  hosts:
-    - test
-
   pre_tasks:
-    - name: install apt packages
-      apt: pkg={{ item }} update_cache=yes cache_valid_time=3600
+
+    - name: install rhel-extra for cent/rhel
+      sudo: True
+      command: rpm -iUvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+      when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
+      ignore_errors: yes  # Maybe already installed
+
+    - name: install packages
+      package: name={{ item }}
       sudo: True
       with_items:
         - git
@@ -47,8 +55,8 @@
 
   roles:
     - clinical_pacs
-    - research_pacs
-    - remote_logging
+#    - research_pacs
+#    - remote_logging
 
   post_tasks:
     - name: Notify Slack that the servers have been updated

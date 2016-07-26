@@ -12,7 +12,7 @@ site_title={{ settings.xnat.title }}
 
 xnat_repo=http://repo/
 
-xnat_url=http://{{ ansible_eth1.ipv4.address }}:{{ ports.xnat.html }}/$project_name
+xnat_url=http://{{ external_addr }}:{{ ports.xnat.html }}/$project_name
 data_dir=/data/xnat
 
 # eof
