@@ -1,3 +1,4 @@
+---
 - name: "Setup orthanc db in postgres"
   postgresql_db: "name={{settings.orthanc.db_name}}
                  state=present
@@ -28,12 +29,15 @@
   template: >
     src=templates/orthanc.json.j2
     dest={{ settings.orthanc.data_dir }}/orthanc.json
+  notify: restart_orthanc
+
+- meta: flush_handlers
 
 - name: "Launch orthanc container"
-  docker:
+  docker_container:
     name: orthanc
     image: jodogne/orthanc-plugins
-    command: "--logdir=/var/log/orthanc /etc/orthanc/orthanc.json"
+    command: ["--logdir=/var/log/orthanc", "/etc/orthanc/orthanc.json"]
     volumes:
       - "{{settings.orthanc.data_dir}}/orthanc.json:/etc/orthanc/orthanc.json:ro"
       - "{{settings.orthanc.data_dir}}/db:/var/lib/orthanc/db"

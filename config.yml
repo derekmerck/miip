@@ -1,0 +1,30 @@
+---
+
+ports:
+  postgres:
+    sql:    1433
+  orthanc:
+    dicom:  4243
+    html:   4280
+  xnat:
+    dicom:  5242
+    html:   5280
+  splunk:
+    syslog: 1514
+    html:   1580
+    api:    1583
+
+settings:
+  orthanc:
+    title: "CIRR-Orthanc"
+    db_name: orthanc
+    aet: CIRR1
+    data_dir: /var/lib/orthanc
+    log_dir:  /var/log/orthanc
+
+  xnat:
+    title: "CIRR-XNAT"
+    db_name: xnat
+    aet: CIRR2
+    data_dir: /var/lib/xnat
+    log_dir:  /var/log/xnat

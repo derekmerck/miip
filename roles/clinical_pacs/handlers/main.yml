@@ -1,0 +1,5 @@
+---
+- name: restart_orthanc
+  docker_container:
+    name: orthanc
+    state: stopped

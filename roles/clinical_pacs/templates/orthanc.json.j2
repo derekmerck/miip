@@ -134,7 +134,7 @@
    **/
 
   // The list of the known DICOM modalities
-  "DicomModalities" : {{ credentials.orthanc.dicom_peers | to_json | safe }},
+  "DicomModalities" : {{ credentials.dicom_peers | to_json | safe }},
 
 
     /**
@@ -157,7 +157,7 @@
 
 
   // The list of the known Orthanc peers
-  "OrthancPeers" : {{ credentials.orthanc.orthanc_peers | to_json | safe }},
+  "OrthancPeers" : {{ credentials.orthanc_peers | to_json | safe }},
 
     /**
      * Each line gives the base URL of an Orthanc peer, possibly

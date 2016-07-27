@@ -1,34 +1,26 @@
 ---
 # Ansible playbook for standing up a single machine MIIP supporting all roles
 
-# TODO: Add wait_for for postgres up
+# TODO: **Critical** -- move cirr1 data volumes onto larger /research/ storage partition
+# TODO: Copy cirr0/orthanc -> cirr1/orthanc
+# TODO: Copy azure/xnat -> cirr1/xnat
+# TODO: Add nginx reverse proxy for load balancing and https
 
 - name: All-in-one MIIP
 
   hosts:
-    - cirr2
+    - cirr1
 
   vars:
     # Wipes DB, useful if rebuilding from scratch after a failed build
     # clean_xnat: True
+
+    # Send a notification to a Slack channel
     # notify: True
 
-    ports:
-      postgres:
-        sql:    1433
-      orthanc:
-        dicom:  4242
-        html:   4280
-      xnat:
-        dicom:  5242
-        html:   5280
-      splunk:
-        syslog: 1514
-        html:   1580
-        api:    1583
-
   vars_files:
-    - secrets.yml
+    - config.yml   # Ports and service settings
+    - secrets.yml  # Credentials
 
   pre_tasks:
 
@@ -55,8 +47,8 @@
 
   roles:
     - clinical_pacs
-#    - research_pacs
-#    - remote_logging
+    - research_pacs
+    - remote_logging
 
   post_tasks:
     - name: Notify Slack that the servers have been updated

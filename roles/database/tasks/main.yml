@@ -1,6 +1,4 @@
-#  - name: "Create postgres config"
-#    template: src="templates/postgres_config.sql.j2"
-
+---
 - name: "Launch postgres container"
   docker:
     name: db
@@ -10,4 +8,7 @@
       POSTGRES_PASSWORD: "{{credentials.postgres.db_pword}}"
     ports:
       - "{{ports.postgres.sql}}:5432"
+
+- name: "Wait for postgres"
+  wait_for: port={{ports.postgres.sql}}
 

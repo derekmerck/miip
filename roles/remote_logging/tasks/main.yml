@@ -1,3 +1,4 @@
+---
 - name: "Launch Splunk container"
   docker:
     name: splunk
@@ -11,6 +12,6 @@
       - "{{ports.splunk.api}}:8088"
     env:
       SPLUNK_START_ARGS: "--accept-license"
-      SPLUNK_CMD: "edit user admin -password {{credentials.splunk.admin_pword}} -role admin -auth admin:changeme"
-      SPLUNK_ADD: "monitor /var/log/orthanc"
+      SPLUNK_CMD:   "edit user admin -password {{credentials.splunk.admin_pword}} -role admin -auth admin:changeme"
+      SPLUNK_ADD:   "monitor /var/log/orthanc"
       SPLUNK_ADD_1: "monitor /usr/local/tomcat/webapps/xnat/logs/"
