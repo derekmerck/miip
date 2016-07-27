@@ -1,6 +1,6 @@
 ---
-# Ansible playbook for standing up a single machine MIIP supporting all roles
 
+# Ansible playbook for standing up a single machine MIIP supporting all roles
 # TODO: **Critical** -- move cirr1 data volumes onto larger /research/ storage partition
 # TODO: Copy cirr0/orthanc -> cirr1/orthanc
 # TODO: Copy azure/xnat -> cirr1/xnat
