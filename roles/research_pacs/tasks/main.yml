@@ -80,8 +80,7 @@
     - "{{ settings.xnat.log_dir }}"
     - "{{ settings.xnat.data_dir }}"
 
-# <CLEAN>
-# or could be "when: xnat_config.changed"
+# <ALLOW_CLEAN>
 - name: "Remove xnat db in postgres"
   postgresql_db: "name={{settings.xnat.db_name}}
                  state=absent
@@ -89,12 +88,12 @@
                  port={{ports.postgres.sql}}
                  login_user={{credentials.postgres.db_user}}
                  login_password={{credentials.postgres.db_pword}}"
-  when: clean_xnat is defined and clean_xnat
+  when: xnat_config.changed and clean_xnat is defined and clean_xnat
 
 - name: "Remove xnat home directory"
   file: path="{{ settings.xnat.data_dir }}/xnat" state=absent
-  when: clean_xnat is defined and clean_xnat
-# </CLEAN>
+  when: xnat_config.changed and ALLOW_CLEAN is defined and ALLOW_CLEAN
+# </ALLOW_CLEAN>
 
 - name: run our instance of xnat
   docker:

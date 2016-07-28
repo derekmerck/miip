@@ -13,10 +13,10 @@
 
   vars:
     # Wipes DB, useful if rebuilding from scratch after a failed build
-    # clean_xnat: True
+    # ALLOW_CLEAN: True
 
     # Send a notification to a Slack channel
-    # notify: True
+    # NOTIFY: True
 
   vars_files:
     - config.yml   # Ports and service settings
@@ -56,4 +56,4 @@
         slack
         token={{ credentials.slack.token }}
         msg="MIIP server `{{ inventory_hostname }}` configured"
-      when: notify is defined and notify
+      when: NOTIFY is defined and NOTIFY
