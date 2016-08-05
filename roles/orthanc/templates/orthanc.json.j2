@@ -27,7 +27,7 @@
   // in the storage (a value of "0" indicates no limit on the number
   // of patients)
   "MaximumPatientCount" : 0,
-  
+
   // List of paths to the custom Lua scripts that are to be loaded
   // into this instance of Orthanc
   "LuaScripts" : [
@@ -38,7 +38,7 @@
   // "./PluginTest.dll" for Windows). These paths can refer to
   // folders, in which case they will be scanned non-recursively to
   // find shared libraries.
-  "Plugins" : [ 
+  "Plugins" : [
     "/usr/share/orthanc/plugins", "/usr/local/share/orthanc/plugins"
   ],
 
@@ -299,7 +299,7 @@
        "Verbose" : true
      }
    **/
-  
+
   // If set to "true", Orthanc will handle "SOP Classes in Study"
   // (0008,0062) in C-FIND requests. This option is turned off by
   // default, as it requires intensive accesses to the hard drive.
@@ -319,7 +319,7 @@
     "EnableIndex" : true,
     "EnableStorage" : false,
     "Host" : "postgres",
-    "Port" : 5432, // Odd that this is not the exposed port... {{ ports.postgres.sql }},
+    "Port" : 5432, // Odd that this is not the exposed port... {{ settings.postgres.ports.sql }},
     "Database" : "{{ settings.orthanc.db_name }}",
     "Username" : "{{ credentials.orthanc.db_user }}",
     "Password" : "{{ credentials.orthanc.db_pword }}"

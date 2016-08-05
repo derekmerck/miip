@@ -3,7 +3,7 @@
   postgresql_db: "name={{settings.orthanc.db_name}}
                  state=present
                  login_host=localhost
-                 port={{ports.postgres.sql}}
+                 port={{settings.postgres.ports.sql}}
                  login_user={{credentials.postgres.db_user}}
                  login_password={{credentials.postgres.db_pword}}"
 
@@ -13,7 +13,7 @@
                    password={{credentials.orthanc.db_pword}}
                    state=present
                    login_host=localhost
-                   port={{ports.postgres.sql}}
+                   port={{settings.postgres.ports.sql}}
                    login_user={{credentials.postgres.db_user}}
                    login_password={{credentials.postgres.db_pword}}"
 
@@ -21,14 +21,14 @@
   sudo: True
   file: path={{ item }} state=directory owner={{ansible_user_id}}
   with_items:
-    - "{{ settings.orthanc.log_dir }}"
-    - "{{ settings.orthanc.data_dir }}"
+    - "{{ settings.orthanc.paths.logs }}"
+    - "{{ settings.orthanc.paths.data }}"
 
 - name: "Create orthanc config"
   sudo: True
   template: >
     src=templates/orthanc.json.j2
-    dest={{ settings.orthanc.data_dir }}/orthanc.json
+    dest={{ settings.orthanc.paths.data }}/orthanc.json
   notify: restart_orthanc
 
 - meta: flush_handlers
@@ -37,13 +37,14 @@
   docker_container:
     name: orthanc
     image: jodogne/orthanc-plugins
-    command: ["--logdir=/var/log/orthanc", "/etc/orthanc/orthanc.json"]
+    # On RHEL, this _may_ need to be ["--logdir...", "config.json"]
+    command: "--logdir=/var/log/orthanc /etc/orthanc/orthanc.json"
     volumes:
-      - "{{settings.orthanc.data_dir}}/orthanc.json:/etc/orthanc/orthanc.json:ro"
-      - "{{settings.orthanc.data_dir}}/db:/var/lib/orthanc/db"
-      - "{{settings.orthanc.log_dir}}:/var/log/orthanc"
+      - "{{settings.orthanc.paths.data}}/orthanc.json:/etc/orthanc/orthanc.json:ro"
+      - "{{settings.orthanc.paths.data}}/db:/var/lib/orthanc/db"
+      - "{{settings.orthanc.paths.logs}}:/var/log/orthanc"
     links:
       - db:postgres
     ports:
-      - "{{ports.orthanc.html}}:8042"
-      - "{{ports.orthanc.dicom}}:4242"
+      - "{{settings.orthanc.ports.http}}:8042"
+      - "{{settings.orthanc.ports.dicom}}:4242"

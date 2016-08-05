@@ -1,4 +1,3 @@
-
 ---
 # Ignore errors here b/c we have modified the configs and added xnat src
 - name: git clone chaselgrove/xnat
@@ -69,7 +68,7 @@
                    role_attr_flags=LOGIN,CREATEDB
                    state=present
                    login_host=localhost
-                   port={{ports.postgres.sql}}
+                   port={{settings.postgres.ports.sql}}
                    login_user={{credentials.postgres.db_user}}
                    login_password={{credentials.postgres.db_pword}}"
 
@@ -77,21 +76,21 @@
   sudo: True
   file: path={{ item }} state=directory owner={{ansible_user_id}}
   with_items:
-    - "{{ settings.xnat.log_dir }}"
-    - "{{ settings.xnat.data_dir }}"
+    - "{{ settings.xnat.paths.logs }}"
+    - "{{ settings.xnat.paths.data }}"
 
 # <ALLOW_CLEAN>
 - name: "Remove xnat db in postgres"
   postgresql_db: "name={{settings.xnat.db_name}}
                  state=absent
                  login_host=localhost
-                 port={{ports.postgres.sql}}
+                 port={{settings.postgres.ports.sql}}
                  login_user={{credentials.postgres.db_user}}
                  login_password={{credentials.postgres.db_pword}}"
   when: xnat_config.changed and clean_xnat is defined and clean_xnat
 
 - name: "Remove xnat home directory"
-  file: path="{{ settings.xnat.data_dir }}/xnat" state=absent
+  file: path="{{ settings.xnat.paths.data }}/xnat" state=absent
   when: xnat_config.changed and ALLOW_CLEAN is defined and ALLOW_CLEAN
 # </ALLOW_CLEAN>
 
@@ -103,8 +102,8 @@
       - "db:postgres"
       - "xnat-repo:repo"
     volumes:
-      - "{{settings.xnat.log_dir}}:/usr/local/tomcat/webapps/xnat/logs"
-      - "{{settings.xnat.data_dir}}:/data"
+      - "{{settings.xnat.paths.logs}}:/usr/local/tomcat/webapps/xnat/logs"
+      - "{{settings.xnat.paths.data}}:/data"
     ports:
-      - "{{ports.xnat.html}}:8080"
-      - "{{ports.xnat.dicom}}:8104"
+      - "{{settings.xnat.ports.http}}:8080"
+      - "{{settings.xnat.ports.dicom}}:8104"

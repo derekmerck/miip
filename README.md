@@ -23,8 +23,8 @@ Uses Ansible to configure and spin up a Docker-based open-source<sup><a name="^s
 
 ## Dependencies
 
-- [Docker] for service virtualization
-- [Python] 2.7, [Ansible], [jinja2] for orchestration
+- [Docker] for service virtualization on host nodes
+- [Python] 2.7, [Ansible], [jinja2] for orchestration on control nodes
 
 [Docker]:http://www.docker.com
 [docker-compose]:https://docs.docker.com/compose/
@@ -36,10 +36,10 @@ Uses Ansible to configure and spin up a Docker-based open-source<sup><a name="^s
 
 ## Usage
 
-Setup all services on a single machine:
+Setup a clinical PACS (orthanc) and research PACS (xnat) along with postgres and splunk on a single machine.
 
 ```bash
-$ ansible-playbook -i hosts -v miip-allinone.yml
+$ ansible-playbook -i hosts -v all_in_one.yml
 ```
 
 
@@ -47,7 +47,7 @@ $ ansible-playbook -i hosts -v miip-allinone.yml
 
 _Warning_: once data has been ingested, be _very_ careful about rebuilding the containers or changing configs, which can trigger rebuilds in the containers and drop data volumes or databases.  An additional "ALLOW_CLEAN" variable flag serves as a protection against this.<sup><a name="^database_ref">[2](#^database)</a></sup>
 
-Ansible requires a `hosts` definition file, and any hosts that are to be configured as all-in-one targets should be included in the `miip` group, to get access to the default settings and port assignments.  Ansible also requires login information for setting up the various services.  A `credentials.example.yml` template is included.
+Override any credentials and service settings by including them in a `secrets.yml` file.
 
 If `./pkg/xnat-1.6.5.tar.gz` exists, it will use that to build XNAT from source instead of downloading the tarball from the NRG.
 
@@ -60,6 +60,15 @@ By default, the Splunk container monitors the Orthanc and XNAT log files.  They 
 ## Troubleshooting
 
 If using [Vagrant] with [VirtualBox], the Maven build for XNAT requires a lot of memory, so you may need to bump the VM RAM up from the default to 2GB.
+
+Also, be sure to use the Docker provisioner.
+
+```yml
+config.vm.provider "virtualbox" do |vb|
+   vb.memory = "2048"
+end
+config.vm.provision "docker`
+```
 
 [vagrant]: http://www.vagrantup.com
 [virtualbox]: https://www.virtualbox.org

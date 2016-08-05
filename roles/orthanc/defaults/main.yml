@@ -1,0 +1,24 @@
+---
+settings:
+  orthanc:
+    title: "Orthanc"
+    aet: ORTHANC
+    db_name: orthanc
+    paths:
+      data:  /var/lib/orthanc
+      logs:  /var/log/orthanc
+    ports:
+      dicom: 4104
+      http:  4080
+
+credentials:
+  orthanc:
+    db_user: "orthanc"
+    db_pword: "passw0rd"
+
+    users:
+      orthanc: "passw0rd"
+
+  dicom_peers: {}
+
+  orthanc_peers: {}

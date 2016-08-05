@@ -7,8 +7,8 @@
       POSTGRES_USER: "{{credentials.postgres.db_user}}"
       POSTGRES_PASSWORD: "{{credentials.postgres.db_pword}}"
     ports:
-      - "{{ports.postgres.sql}}:5432"
+      - "{{settings.postgres.ports.sql}}:5432"
 
 - name: "Wait for postgres"
-  wait_for: port={{ports.postgres.sql}}
+  wait_for: port={{settings.postgres.ports.sql}} delay=3
 
