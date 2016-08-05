@@ -42,6 +42,7 @@
   with_items:
     - "{{ settings.orthanc.paths.logs }}"
     - "{{ settings.orthanc.paths.data }}"
+    - "{{ settings.orthanc.paths.data }}/scripts"
 
 - name: "Create orthanc config"
   sudo: True
@@ -55,7 +56,7 @@
   sudo: True
   template: >
       src=templates/autorouter.lua.j2
-      dest=dest={{ settings.orthanc.paths.data }}/scripts/autorouter.lua
+      dest={{ settings.orthanc.paths.data }}/scripts/autorouter.lua
 #  local_action: >
 #      template
 #      src=templates/autorouter.lua.j2
@@ -66,7 +67,7 @@
 
 - name: "Launch orthanc container"
   docker_container:
-    name: orthanc
+    name: "{{name}}"
     image: jodogne/orthanc-plugins
     # On RHEL, this _may_ need to be ["--logdir...", "config.json"]
     command: "--logdir=/var/log/orthanc /etc/orthanc/orthanc.json"

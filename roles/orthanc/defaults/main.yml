@@ -22,7 +22,7 @@ credentials:
       orthanc: "passw0rd"
 
   dicom_modalities:
-    sample_modality: [SAMPLE_AE, sample_host, sample_port]
+    sample-modality: ['SAMPLE_AE', 'sample', 104]
 
   orthanc_peers:
-    sample_peer: ['sample_host:sample_port', 'orthanc', 'passw0rd']
+    sample-peer: ['http://sample:4280', 'orthanc', 'passw0rd']
