@@ -3,6 +3,7 @@
 # TODO: Copy azure/xnat -> cirr1/xnat
 # TODO: Add nginx reverse proxy for load balancing and https
 # TODO: Create router_pacs role or clinical_pacs w routing subrole
+# TODO: filter remote modalities by necessary, update with local vs. external addresses
 # TODO: Create anonymizer
 
 - name: Create Clinical and Research Archives
@@ -21,7 +22,7 @@
 #    - secrets.yml  # Credentials
 
   roles:
-    - { role: orthanc, tags: "orthanc" }
+    - { role: orthanc, tags: "orthanc", name: "orthanc_archive" }
     - { role: xnat,    tags: "xnat" }
     - { role: splunk,  tags: "splunk"}
 

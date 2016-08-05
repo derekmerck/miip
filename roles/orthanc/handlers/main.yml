@@ -3,4 +3,4 @@
   docker_container:
     name: orthanc
     state: stopped
-    ignore_errors: yes  # Might not exist yet
+  ignore_errors: yes  # Might not exist yet

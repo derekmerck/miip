@@ -106,8 +106,6 @@
   // SOP classes (aka. "promiscuous mode")
   "UnknownSopClassAccepted"            : false,
 
-
-
   /**
    * Security-related options for the HTTP server
    **/
@@ -134,7 +132,7 @@
    **/
 
   // The list of the known DICOM modalities
-  "DicomModalities" : {{ credentials.dicom_peers | to_json | safe }},
+  "DicomModalities" : {{ credentials.dicom_modalities | to_json | safe }},
 
 
     /**

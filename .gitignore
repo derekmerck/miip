@@ -1,8 +1,8 @@
-*secret*
-*agrant*
+secrets.yml
+Vagrantfile
 *.retry
 hosts
 /.idea/
+/.vagrant/
 /pkg/
-*config.yml
-*.old.*
+*.old*

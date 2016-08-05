@@ -1,3 +1,16 @@
 function OnStoredInstance(instanceId, tags, metadata)
-   Delete(SendToPeer(instanceId, '{{ dest }}'))
+
+    {%- for d in settings.orthanc.destinations %}
+        {%- if d.type == "dicom" and credentials.dicom_modalities[d.dest] is defined %}
+
+    SendToModality( instanceId, {{ d.dest }} )
+
+        {%- elif credentials.orthanc_peers[d.dest] is defined %}
+
+    SendToPeer( instanceId, {{ d.dest }} )
+
+        {%- endif %}
+    {%- endfor %}
+
+    Delete(instanceId)
 end

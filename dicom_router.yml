@@ -1,0 +1,55 @@
+---
+- name: dicom_router
+  hosts: vagrant
+
+#  vars_files:
+#    - secrets.yml  # Credentials
+
+  roles:
+    - role: orthanc
+      tags: router
+      name: peer_router
+      settings:
+        orthanc:
+          ports:
+            dicom: 4105
+            http:  4085
+          destinations:   # Peer destinations are looked up in the orthanc_peer list
+            - type: peer
+              dest: sample_peer
+
+    - role: orthanc
+      tags: router
+      name: dicom_router
+      settings:
+        orthanc:
+          ports:
+            dicom: 4106
+            http:  4086
+          destinations:   # DICOM destinations are looked up in the dicom_peer list
+           - type: dicom
+             dest: sample_modality
+
+    - role: orthanc
+      tags: router
+      name: multiplexer
+      settings:
+        orthanc:
+          ports:
+            dicom: 4107
+            http:  4087
+          destinations:
+            - type: peer
+              dest: peer_router
+            - type: peer
+              dest: dicom_router
+
+#    - role: remote_logging
+
+  post_tasks:
+    - name: Notify Slack that the servers have been updated
+      local_action: >
+        slack
+        token={{ credentials.slack.token }}
+        msg="MIIP DICOM router `{{ inventory_hostname }}` configured"
+      when: NOTIFY is defined and NOTIFY and credentials.slack.token is defined

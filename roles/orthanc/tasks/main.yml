@@ -1,4 +1,23 @@
 ---
+#- debug: var=settings
+
+# Add this node to the peers list, may want to use external address instead..
+- set_fact:
+    credentials:
+      orthanc_peers: "{{
+        credentials.orthanc_peers |
+        default({}) |
+        combine( {
+          name: [
+            '{0}:{1}'.format(ansible_eth0.ipv4.address, settings.orthanc.ports.http),
+            'orthanc',
+            'passw0rd'
+          ]
+        })
+      }}"
+
+#- debug: var=credentials.orthanc_peers
+
 - name: "Setup orthanc db in postgres"
   postgresql_db: "name={{settings.orthanc.db_name}}
                  state=present
@@ -31,6 +50,18 @@
     dest={{ settings.orthanc.paths.data }}/orthanc.json
   notify: restart_orthanc
 
+- name: "Setup routing lua"
+  tags: "router"
+  sudo: True
+  template: >
+      src=templates/autorouter.lua.j2
+      dest=dest={{ settings.orthanc.paths.data }}/scripts/autorouter.lua
+#  local_action: >
+#      template
+#      src=templates/autorouter.lua.j2
+#      dest='./tmp_{{name}}_autorouter.lua'
+  notify: restart_orthanc
+
 - meta: flush_handlers
 
 - name: "Launch orthanc container"
@@ -42,6 +73,7 @@
     volumes:
       - "{{settings.orthanc.paths.data}}/orthanc.json:/etc/orthanc/orthanc.json:ro"
       - "{{settings.orthanc.paths.data}}/db:/var/lib/orthanc/db"
+      - "{{settings.orthanc.paths.data}}/scripts:/var/lib/orthanc/scripts"
       - "{{settings.orthanc.paths.logs}}:/var/log/orthanc"
     links:
       - db:postgres
