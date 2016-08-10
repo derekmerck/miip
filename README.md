@@ -7,12 +7,17 @@ Summer 2016
 Uses Ansible to configure and spin up a Docker-based open-source<sup><a name="^splunk_ref">[1](#^splunk)</a></sup> medical imaging informatics platform.  Originally developed to support the RIH Clinical Imaging Research Repository (CIRR).
 
 
-## Services
+## All-in-One Services
 
-- Clinical/PHI Facing Receiver - [Orthanc] on 4280 (HTTP/REST), 4242 (DICOM)
+- Clinical/PHI Facing Receiver - [Orthanc] on 4280 (HTTP/REST), 4243 (DICOM)
 - Research/Anonymized Facing Repository - [XNAT] 1.6.5 on 5280 (HTTP/REST), 5242 (DICOM)
 - Database - [Postgresql] 9.5 on 1432 (SQL)
 - Log Monitoring - [Splunk] Lite on 1580 (HTTP/REST), 1514 (syslog)
+
+
+## Routing Services
+
+- Clinical/PHI Facing Router - [Orthanc] on 4280 (HTTP/REST), 4243 (DICOM) with autoforwarding
 
 [Splunk]:http://www.splunk.com
 [Postgresql]:http://www.postgresql.org
@@ -39,7 +44,13 @@ Uses Ansible to configure and spin up a Docker-based open-source<sup><a name="^s
 Setup a clinical PACS (orthanc) and research PACS (xnat) along with postgres and splunk on a single machine.
 
 ```bash
-$ ansible-playbook -i hosts -v all_in_one.yml
+$ ansible-playbook -i hosts -v all_in_one_archive.yml
+```
+
+The all-in-one server can become somewhat slow to ingest data (5+ images/sec), so we also use an optional receiver queue to accept incoming data and forward it along.  Keeping this queue empty results in approximately 40+ images/sec ingestion.  Moreover, it can be configured to route to multiple different archives.
+
+```bash
+$ ansible-playbook -i hosts -v dicom_router.yml
 ```
 
 
@@ -54,7 +65,7 @@ If `./pkg/xnat-1.6.5.tar.gz` exists, it will use that to build XNAT from source 
 
 ### Administration
 
-By default, the Splunk container monitors the Orthanc and XNAT log files.  They are also exposed on the host in `\var\log\orthanc` and `\var\log\xnat` by default.
+By default, the Splunk container monitors the Orthanc and XNAT log files.  These logs are also exposed on the host in `\var\log\orthanc` and `\var\log\xnat` by default.
 
 
 ## Troubleshooting

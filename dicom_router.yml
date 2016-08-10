@@ -1,13 +1,14 @@
 ---
-- name: dicom_router
+# Ansible playbook for standing up a DICOM router
+
+- name: Setup DICOM router
+
   hosts: vagrant
 
   vars:
-    # Wipes DB, useful if rebuilding from scratch after a failed build
-    # ALLOW_CLEAN: True
-
     # Send a notification to a Slack channel
     # NOTIFY: True
+
 #  vars_files:
 #    - secrets.yml  # Credentials
 

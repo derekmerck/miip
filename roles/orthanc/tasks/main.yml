@@ -9,7 +9,7 @@
         default({}) |
         combine( {
           name: [
-            '{0}:{1}'.format(ansible_eth0.ipv4.address, settings.orthanc.ports.http),
+            '{0}:{1}'.format(ansible_default_ipv4.address, settings.orthanc.ports.http),
             'orthanc',
             'passw0rd'
           ]
@@ -61,6 +61,7 @@
 #      template
 #      src=templates/autorouter.lua.j2
 #      dest='./tmp_{{name}}_autorouter.lua'
+  when: settings.orthanc.destinations is defined
   notify: restart_orthanc
 
 - meta: flush_handlers
@@ -78,6 +79,7 @@
       - "{{settings.orthanc.paths.logs}}:/var/log/orthanc"
     links:
       - db:postgres
+      # TODO: Need any other defined links (like to routing peers)
     ports:
       - "{{settings.orthanc.ports.http}}:8042"
       - "{{settings.orthanc.ports.dicom}}:4242"

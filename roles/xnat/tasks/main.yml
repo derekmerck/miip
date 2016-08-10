@@ -78,6 +78,7 @@
   with_items:
     - "{{ settings.xnat.paths.logs }}"
     - "{{ settings.xnat.paths.data }}"
+  ignore_errors: yes  # May already exist
 
 # <ALLOW_CLEAN>
 - name: "Remove xnat db in postgres"

@@ -10,8 +10,8 @@ settings:
       data:  '/var/lib/{{ name }}'
       logs:  '/var/log/{{ name }}'
     ports:
-      dicom: 4104
-      http:  4080
+      dicom: 4243
+      http:  4280
 
 credentials:
   orthanc:
@@ -21,8 +21,8 @@ credentials:
     users:
       orthanc: "passw0rd"
 
-  dicom_modalities:
-    sample-modality: ['SAMPLE_AE', 'sample', 104]
-
-  orthanc_peers:
-    sample-peer: ['http://sample:4280', 'orthanc', 'passw0rd']
+#  dicom_modalities:
+#    sample-modality: ['SAMPLE_AE', 'sample', 104]
+#
+#  orthanc_peers:
+#    sample-peer: ['http://sample:4280', 'orthanc', 'passw0rd']

@@ -1,12 +1,7 @@
 ---
 # Ansible playbook for standing up a single machine clinical and research archive
-# TODO: Copy azure/xnat -> cirr1/xnat
-# TODO: Add nginx reverse proxy for load balancing and https
-# TODO: Create router_pacs role or clinical_pacs w routing subrole
-# TODO: filter remote modalities by necessary, update with local vs. external addresses
-# TODO: Create anonymizer
 
-- name: Create Clinical and Research Archives
+- name: Setup Clinical and Research Archives
 
   hosts:
     - vagrant
@@ -18,13 +13,13 @@
     # Send a notification to a Slack channel
     # NOTIFY: True
 
-#  vars_files:
-#    - secrets.yml  # Credentials
+  vars_files:
+    - secrets.yml  # Credentials
 
   roles:
-    - { role: orthanc, tags: "orthanc", name: "orthanc_archive" }
+    - { role: orthanc, tags: "orthanc" }
     - { role: xnat,    tags: "xnat" }
-    - { role: splunk,  tags: "splunk"}
+    - { role: splunk,  tags: "splunk" }
 
   post_tasks:
     - name: Notify Slack that the servers have been updated
