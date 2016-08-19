@@ -25,4 +25,4 @@ credentials:
 #    sample-modality: ['SAMPLE_AE', 'sample', 104]
 #
 #  orthanc_peers:
-#    sample-peer: ['http://sample:4280', 'orthanc', 'passw0rd']
+#    sample-peer: ['sample:4280', 'orthanc', 'passw0rd']

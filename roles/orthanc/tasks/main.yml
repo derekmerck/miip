@@ -11,12 +11,12 @@
           name: [
             '{0}:{1}'.format(ansible_default_ipv4.address, settings.orthanc.ports.http),
             'orthanc',
-            'passw0rd'
+            '{0}'.format(credentials.orthanc.users.orthanc)
           ]
         })
       }}"
 
-#- debug: var=credentials.orthanc_peers
+- debug: var=credentials.orthanc_peers
 
 - name: "Setup orthanc db in postgres"
   postgresql_db: "name={{settings.orthanc.db_name}}
