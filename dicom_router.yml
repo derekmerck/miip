@@ -3,14 +3,17 @@
 
 - name: Setup DICOM router
 
-  hosts: vagrant
+  hosts: cirr2
 
   vars:
     # Send a notification to a Slack channel
     # NOTIFY: True
 
-#  vars_files:
-#    - secrets.yml  # Credentials
+    credentials:
+      dicom_modalities:
+        sample-modality: ['SAMPLE_AE', 'sample', 104]
+      orthanc_peers:
+        sample-peer: ['sample:4280', 'orthanc', 'passw0rd']
 
   roles:
     - role: orthanc

@@ -1,4 +1,6 @@
 ---
+#- debug: var=settings
+
 - name: "Launch postgres container"
   docker:
     name: db

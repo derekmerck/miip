@@ -17,7 +17,8 @@ Uses Ansible to configure and spin up a Docker-based open-source<sup><a name="^s
 
 ## Routing Services
 
-- Clinical/PHI Facing Router - [Orthanc] on 4280 (HTTP/REST), 4243 (DICOM) with autoforwarding
+- Clinical/PHI Facing Forwarder - [Orthanc] on 4280 (HTTP/REST), 4243 (DICOM) with autoforwarding
+- Multiplexing Router (single send -> multiple forwarding queues) - [Orthanc] on configurable ports
 
 [Splunk]:http://www.splunk.com
 [Postgresql]:http://www.postgresql.org
@@ -83,6 +84,32 @@ config.vm.provision "docker`
 
 [vagrant]: http://www.vagrantup.com
 [virtualbox]: https://www.virtualbox.org
+
+To get a multiplexing router to work on RedHat/CENTos run this to enable inter-container communication:
+
+`$ sudo iptables -I INPUT 4 -i docker0 -j ACCEPT`
+
+See <https://github.com/docker/docker/issues/10450> for discussion.  Alternatively, we could manually link the containers when they are instantiated.
+
+
+### Tuning Postgresql
+
+See <http://pgtune.leopard.in.ua> for simple config tool.  For our servers w 200GB of RAM I used the following:
+
+```
+max_connections = 200
+shared_buffers = 25GB
+effective_cache_size = 75GB
+work_mem = 128MB
+maintenance_work_mem = 2GB
+min_wal_size = 1GB
+max_wal_size = 2GB
+checkpoint_completion_target = 0.7
+wal_buffers = 16MB
+default_statistics_target = 100
+```
+
+Although it didn't seem to make much of a difference in performance.
 
 ## Acknowledgements
 

@@ -3,14 +3,14 @@ name: "orthanc"
 
 settings:
   orthanc:
-    title: 'Orthanc'
+    title: '{{ name }}'
     aet: ORTHANC
     db_name: '{{ name }}'
     paths:
-      data:  '/var/lib/{{ name }}'
-      logs:  '/var/log/{{ name }}'
+      data:  '/var/lib/orthanc/{{ name }}'
+      logs:  '/var/log/orthanc/{{ name }}'
     ports:
-      dicom: 4243
+      dicom: 4242
       http:  4280
 
 credentials:

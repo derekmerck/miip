@@ -127,14 +127,14 @@
 
   // The list of the registered users. Because Orthanc uses HTTP
   // Basic Authentication, the passwords are stored as plain text.
-  "RegisteredUsers" : {{ credentials.orthanc.users | to_json | safe }},
+  "RegisteredUsers" : {{ credentials.orthanc.users | default({}) | to_json | safe }},
 
   /**
    * Network topology
    **/
 
   // The list of the known DICOM modalities
-  "DicomModalities" : {{ credentials.dicom_modalities | to_json | safe }},
+  "DicomModalities" : {{ credentials.dicom_modalities | default({}) | to_json | safe }},
 
 
     /**
@@ -157,7 +157,7 @@
 
 
   // The list of the known Orthanc peers
-  "OrthancPeers" : {{ credentials.orthanc_peers | to_json | safe }},
+  "OrthancPeers" : {{ credentials.orthanc_peers | default({}) | to_json | safe }},
 
     /**
      * Each line gives the base URL of an Orthanc peer, possibly

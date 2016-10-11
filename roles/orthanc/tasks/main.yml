@@ -16,7 +16,7 @@
         })
       }}"
 
-- debug: var=credentials.orthanc_peers
+#- debug: var=credentials.orthanc_peers
 
 - name: "Setup orthanc db in postgres"
   postgresql_db: "name={{settings.orthanc.db_name}}
@@ -71,7 +71,7 @@
     name: "{{name}}"
     image: jodogne/orthanc-plugins
     # On RHEL, this _may_ need to be ["--logdir...", "config.json"]
-    command: "--logdir=/var/log/orthanc /etc/orthanc/orthanc.json"
+    command: "--verbose --logdir=/var/log/orthanc /etc/orthanc/orthanc.json"
     volumes:
       - "{{settings.orthanc.paths.data}}/orthanc.json:/etc/orthanc/orthanc.json:ro"
       - "{{settings.orthanc.paths.data}}/db:/var/lib/orthanc/db"
